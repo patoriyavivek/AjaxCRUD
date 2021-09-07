@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			
+			listallstudent();
+			$("#btn").click(function(){
+
+				insert($("#txt").val())
+				$("#txt").val("")
+				$("#txt").focus()
+				listallstudent()
+
+
+			})
+
+			$("#txt").keypress(function(e){
+				/*console.log(e.which)*/
+				if(e.which==13)
+				{
+					$("#btn").trigger("click")
+				}
+
+
+
+			})
+
+			$("table").on("click",".del",function(){
+
+			sid = $(this).parent().children().first().text()
+			delet(sid)
+			listallstudent()
+
+
+			})
+
+		})
+
+		function listallstudent(){
+
+			$("table").text(" ")
+
+			$.ajax({
+
+			url:"https://arjunbala.com/DemoAPI/getAllStudents.php",
+			dataType:"json",method:"POST"
+		}).done(function(output){
+
+			$.each(output,function(i,value){
+
+					$("#liststudent").append("<tr><td>"+value.StudentID+"</td><td>"+value.StudentName+"</td><td class='del'><a href='#'>DELET</a>	</td></tr>")
+
+			})
+
+			
+		})
+
+		}
+
+		function insert(sname){
+
+			$.ajax({
+
+					url:"https://arjunbala.com/DemoAPI/insertStudent.php",
+					data:{
+						StudentName:sname
+					},
+					method:"POST",
+					dataType:"html"
+
+			})
+		}
+
+
+		function delet(sID){
+
+			$.ajax({
+
+					url:"https://arjunbala.com/DemoAPI/deleteStudent.php",
+					data:{
+						StudentID:sID
+					},
+					method:"POST",
+					dataType:"html"
+
+			})
+		}
+
+	</script>
+</head>
+<body align="center">
+
+	<input type="text" id="txt" name="">
+	<button id="btn">ADD</button>
+
+
+	<table id="liststudent" border="1">
+		
+
+	</table>
+
+</body>
+</html>
